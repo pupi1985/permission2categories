@@ -11,7 +11,7 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
 {
     //setup vars and initiate p2c class
     $p2c = qa_load_module('process', 'Permissions2Categories');
-    $categoryid = $post['categoryid'];
+    $categoryid = (int)$post['categoryid'];
 
     // run the original function and get all the info
     $rules = qa_page_q_post_rules_base($post, $parentpost, $siblingposts, $childposts);

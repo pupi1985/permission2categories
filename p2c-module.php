@@ -61,21 +61,21 @@ class p2c_category_permission
     /**
      * Checks the permission level needed to access $categoryid. If no permission level exists returns 0.
      *
-     * @param string $categoryid
+     * @param int $categoryid
      *
      * @return string - number which equates to the permission level required
      */
     function category_permit_level($categoryid)
     {
-        $all_permit_levels = $this->category_permit_levels;
-
-        return array_key_exists($categoryid, $all_permit_levels) ? $all_permit_levels[$categoryid] : 0;
+        return isset($this->category_permit_levels[$categoryid])
+            ? $this->category_permit_levels[$categoryid]
+            : null;
     }
 
     /**
      * Returns true if the logged in user has the required permission level to access $categoryid else false
      *
-     * @param string $categoryid
+     * @param int $categoryid
      *
      * @return bool
      */

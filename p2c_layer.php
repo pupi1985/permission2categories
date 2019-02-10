@@ -21,7 +21,7 @@ class qa_html_theme_layer extends qa_html_theme_base
 
         if ($this->request == 'admin/categories' && qa_get('edit') >= 1) {
             $p2c = qa_load_module('process', 'Permissions2Categories');
-            $categoryvalue = $permitoptions[$p2c->category_permit_level(qa_get('edit'))];
+            $categoryvalue = $permitoptions[$p2c->category_permit_level((int)qa_get('edit'))];
 
             $this->content['form']['fields'][] = array(
                 'tags' => 'NAME="p2c_permit_level" ID="p2c_form"',
@@ -44,7 +44,7 @@ class qa_html_theme_layer extends qa_html_theme_base
     function q_list_item($q_item)
     {
         $p2c = qa_load_module('process', 'Permissions2Categories');
-        $categoryid = $q_item['raw']['categoryid'];
+        $categoryid = (int)$q_item['raw']['categoryid'];
 
         if ($p2c->has_permit($categoryid)) {
             parent::q_list_item($q_item);
@@ -62,7 +62,7 @@ class qa_html_theme_layer extends qa_html_theme_base
         $p2c = qa_load_module('process', 'Permissions2Categories');
 
         if (isset($navlink['categoryid']) && ($class == 'nav-cat' || $class == 'browse-cat')) {
-            $categoryid = $navlink['categoryid'];
+            $categoryid = (int)$navlink['categoryid'];
 
             if ($p2c->has_permit($categoryid)) {
                 parent::nav_item($key, $navlink, $class, $level = null);
