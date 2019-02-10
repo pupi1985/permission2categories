@@ -35,7 +35,7 @@ class p2c_category_permission
      */
     function edit_permit_level($categoryid, $key, $value)
     {
-        require_once QA_INCLUDE_DIR . 'qa-db-metas.php'; //make sure we have access to the functions we need.
+        require_once QA_INCLUDE_DIR . 'db/metas.php'; //make sure we have access to the functions we need.
 
         qa_db_categorymeta_set($categoryid, $key, $value);
     }
