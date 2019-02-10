@@ -18,7 +18,7 @@ class p2c_category_permission
     /**
      * If category is updated without error we add/edit our permission level into the qa_categorymetas table.
      */
-    function init_page()
+    function plugins_loaded()
     {
         $permit_level = qa_post_text('p2c_permit_level');
         if (qa_clicked('dosavecategory') && isset($permit_level) && !qa_clicked('docancel')) {
