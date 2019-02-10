@@ -2,6 +2,8 @@
 
 class p2c_category_permission
 {
+    const QA_USER_LEVEL_ANYONE = -1;
+
     /** @var string - the meta-tag we insert into the title column */
     var $category_metakey = 'p2c_permission_level';
 
@@ -37,7 +39,11 @@ class p2c_category_permission
     {
         require_once QA_INCLUDE_DIR . 'db/metas.php'; //make sure we have access to the functions we need.
 
-        qa_db_categorymeta_set($categoryid, $key, $value);
+        if ((int)$value === p2c_category_permission::QA_USER_LEVEL_ANYONE) {
+            qa_db_categorymeta_clear($categoryid, $key);
+        } else {
+            qa_db_categorymeta_set($categoryid, $key, $value);
+        }
     }
 
     /**
@@ -83,6 +89,16 @@ class p2c_category_permission
     {
         $permit_level = $this->category_permit_level($categoryid);
 
-        return qa_get_logged_in_level() >= $permit_level || $permit_level == 0;
+        // If there is no restriction set in the given category
+        if (is_null($permit_level)) {
+            return true;
+        }
+
+        // If there is at least one permission that means the anonymous user will not be able to access it
+        if (!qa_is_logged_in()) {
+            return false;
+        }
+
+        return qa_get_logged_in_level() >= $permit_level;
     }
 }

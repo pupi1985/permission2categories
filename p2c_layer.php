@@ -10,6 +10,7 @@ class qa_html_theme_layer extends qa_html_theme_base
     function initialize()
     {
         $permitoptions = array(
+            p2c_category_permission::QA_USER_LEVEL_ANYONE => 'Anyone',
             QA_USER_LEVEL_BASIC => 'Registered+',
             QA_USER_LEVEL_APPROVED => 'Approved+',
             QA_USER_LEVEL_EXPERT => 'Expert+',
@@ -19,16 +20,17 @@ class qa_html_theme_layer extends qa_html_theme_base
             QA_USER_LEVEL_SUPER => 'Super Admin',
         );
 
-        if ($this->request == 'admin/categories' && qa_get('edit') >= 1) {
+        $categoryId = (int)qa_get('edit');
+        if ($this->request == 'admin/categories' && $categoryId >= 1) {
             $p2c = qa_load_module('process', 'Permissions2Categories');
-            $categoryvalue = $permitoptions[$p2c->category_permit_level((int)qa_get('edit'))];
+            $categoryLevel = $p2c->category_permit_level($categoryId);
 
             $this->content['form']['fields'][] = array(
                 'tags' => 'NAME="p2c_permit_level" ID="p2c_form"',
                 'label' => 'Select permission level requirement',
                 'type' => 'select',
                 'options' => $permitoptions,
-                'value' => $categoryvalue,
+                'value' => isset($permitoptions[$categoryLevel]) ? $permitoptions[$categoryLevel] : reset($permitoptions),
             );
         }
 
