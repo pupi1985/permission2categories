@@ -5,9 +5,9 @@ class qa_html_theme_layer extends qa_html_theme_base
     /**
      * (Adds the field to select a permission level for the category)
      *
-     * @see qa_html_theme_base::doctype()
+     * @see qa_html_theme_base::initialize()
      */
-    function doctype()
+    function initialize()
     {
         $permitoptions = array(
             QA_USER_LEVEL_BASIC => 'Registered+',
@@ -32,7 +32,7 @@ class qa_html_theme_layer extends qa_html_theme_base
             );
         }
 
-        qa_html_theme_base::doctype();
+        parent::initialize();
     }
 
     /**
@@ -47,7 +47,7 @@ class qa_html_theme_layer extends qa_html_theme_base
         $categoryid = $q_item['raw']['categoryid'];
 
         if ($p2c->has_permit($categoryid)) {
-            qa_html_theme_base::q_list_item($q_item);
+            parent::q_list_item($q_item);
         }
     }
 
@@ -65,13 +65,13 @@ class qa_html_theme_layer extends qa_html_theme_base
             $categoryid = $navlink['categoryid'];
 
             if ($p2c->has_permit($categoryid)) {
-                qa_html_theme_base::nav_item($key, $navlink, $class, $level = null);
+                parent::nav_item($key, $navlink, $class, $level = null);
             }
         }
 
         if (!isset($navlink['categoryid'])) //if the navlink is not a category use parent class method.
         {
-            qa_html_theme_base::nav_item($key, $navlink, $class, $level = null);
+            parent::nav_item($key, $navlink, $class, $level);
         }
     }
 }

@@ -2,15 +2,10 @@
 
 class p2c_category_permission
 {
-    /**
-     *
-     * @var string - the meta-tag we insert into the title colunm
-     */
+    /** @var string - the meta-tag we insert into the title column */
     var $category_metakey = 'p2c_permission_level';
 
-    /**
-     * @var array - Cache for the category permission levels
-     */
+    /** @var array - Cache for the category permission levels */
     var $category_permit_levels = array();
 
     function __construct()
@@ -58,8 +53,9 @@ class p2c_category_permission
 				FROM ^categorymetas 
 				WHERE title=\'' . $this->category_metakey . '\''));
 
-        foreach ($category_permissions as $value)
+        foreach ($category_permissions as $value) {
             $this->category_permit_levels[$value['categoryid']] = $value['content'];
+        }
 
         return $this->category_permit_levels;
     }
@@ -75,27 +71,20 @@ class p2c_category_permission
     {
         $all_permit_levels = $this->category_permit_levels;
 
-        if (array_key_exists($categoryid, $all_permit_levels)) {
-            return $all_permit_levels[$categoryid];
-        } else {
-            return 0;
-        }
+        return array_key_exists($categoryid, $all_permit_levels) ? $all_permit_levels[$categoryid] : 0;
     }
 
     /**
      * Returns true if the logged in user has the required permission level to access $categoryid else false
      *
-     * @param unknown_type $categoryid
+     * @param string $categoryid
      *
      * @return bool
      */
     function has_permit($categoryid)
     {
         $permit_level = $this->category_permit_level($categoryid);
-        if (qa_get_logged_in_level() >= $permit_level || $permit_level == 0) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return qa_get_logged_in_level() >= $permit_level || $permit_level == 0;
     }
 }
