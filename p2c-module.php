@@ -48,13 +48,11 @@ class p2c_category_permission
      */
     function get_category_permit_levels()
     {
-        $category_permissions = qa_db_read_all_assoc(qa_db_query_sub('
-				SELECT categoryid, content 
-				FROM ^categorymetas 
-				WHERE title=\'' . $this->category_metakey . '\''));
+        $query = 'SELECT categoryid, content FROM ^categorymetas WHERE title = $';
+        $category_permissions = qa_db_read_all_assoc(qa_db_query_sub($query, $this->category_metakey));
 
         foreach ($category_permissions as $value) {
-            $this->category_permit_levels[$value['categoryid']] = $value['content'];
+            $this->category_permit_levels[(int)$value['categoryid']] = (int)$value['content'];
         }
 
         return $this->category_permit_levels;
