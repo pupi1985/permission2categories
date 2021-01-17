@@ -48,7 +48,7 @@ class qa_html_theme_layer extends qa_html_theme_base
         $p2c = qa_load_module('process', 'Permissions2Categories');
         $categoryid = (int)$q_item['raw']['categoryid'];
 
-        if ($p2c->has_permit($categoryid)) {
+        if ($p2c->has_permit($categoryid, qa_get_logged_in_userid(), qa_get_logged_in_level())) {
             parent::q_list_item($q_item);
         }
     }
@@ -66,8 +66,8 @@ class qa_html_theme_layer extends qa_html_theme_base
         if (isset($navlink['categoryid']) && ($class == 'nav-cat' || $class == 'browse-cat')) {
             $categoryid = (int)$navlink['categoryid'];
 
-            if ($p2c->has_permit($categoryid)) {
-                parent::nav_item($key, $navlink, $class, $level = null);
+            if ($p2c->has_permit($categoryid, qa_get_logged_in_userid(), qa_get_logged_in_level())) {
+                parent::nav_item($key, $navlink, $class, $level);
             }
         }
 

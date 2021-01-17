@@ -4,8 +4,8 @@ class p2c_category_permission
 {
     const QA_USER_LEVEL_ANYONE = -1;
 
-    /** @var string - the meta-tag we insert into the title column */
-    var $category_metakey = 'p2c_permission_level';
+    /** the meta-tag we insert into the title column */
+    const CATEGORY_META_KEY = 'p2c_permission_level';
 
     /** @var array - Cache for the category permission levels */
     var $category_permit_levels = array();
@@ -22,7 +22,7 @@ class p2c_category_permission
     {
         $permit_level = qa_post_text('p2c_permit_level');
         if (qa_clicked('dosavecategory') && isset($permit_level) && !qa_clicked('docancel')) {
-            $this->edit_permit_level(qa_post_text('edit'), $this->category_metakey, qa_post_text('p2c_permit_level'));
+            $this->edit_permit_level(qa_post_text('edit'), self::CATEGORY_META_KEY, qa_post_text('p2c_permit_level'));
         }
     }
 
@@ -55,7 +55,7 @@ class p2c_category_permission
     function get_category_permit_levels()
     {
         $query = 'SELECT categoryid, content FROM ^categorymetas WHERE title = $';
-        $category_permissions = qa_db_read_all_assoc(qa_db_query_sub($query, $this->category_metakey));
+        $category_permissions = qa_db_read_all_assoc(qa_db_query_sub($query, self::CATEGORY_META_KEY));
 
         foreach ($category_permissions as $value) {
             $this->category_permit_levels[(int)$value['categoryid']] = (int)$value['content'];
@@ -82,10 +82,12 @@ class p2c_category_permission
      * Returns true if the logged in user has the required permission level to access $categoryid else false
      *
      * @param int $categoryid
+     * @param mixed $userId
+     * @param int $userLevel
      *
      * @return bool
      */
-    function has_permit($categoryid)
+    function has_permit($categoryid, $userId, $userLevel)
     {
         $permit_level = $this->category_permit_level($categoryid);
 
@@ -95,10 +97,10 @@ class p2c_category_permission
         }
 
         // If there is at least one permission that means the anonymous user will not be able to access it
-        if (!qa_is_logged_in()) {
+        if (is_null($userId)) {
             return false;
         }
 
-        return qa_get_logged_in_level() >= $permit_level;
+        return $userLevel >= $permit_level;
     }
 }

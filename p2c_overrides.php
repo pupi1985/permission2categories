@@ -16,8 +16,10 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
     // run the original function and get all the info
     $rules = qa_page_q_post_rules_base($post, $parentpost, $siblingposts, $childposts);
 
+    $userLevel = qa_user_level_for_categories(array($categoryid));
+
     //check to see if user has permission to view the category, if not, then hide the question
-    if (!$p2c->has_permit($categoryid)) {
+    if (!$p2c->has_permit($categoryid, qa_get_logged_in_userid(), $userLevel)) {
         $rules['viewable'] = 0;
     }
 
